@@ -17,6 +17,24 @@ Production-ready FastAPI application for audio stem separation using Spleeter. T
 - 🎯 **Code Quality**: 100/100 quality score with zero errors or warnings (Ruff)
 - 🔧 **TensorFlow Compatibility**: Automatic compatibility shim for TensorFlow 2.13+ on Apple Silicon
 
+## 🌐 Live Demo
+
+The API is **deployed and running** on Railway:
+
+- **API Base URL**: https://stem-separator-api-production.up.railway.app
+- **Swagger UI**: https://stem-separator-api-production.up.railway.app/docs
+- **ReDoc**: https://stem-separator-api-production.up.railway.app/redoc
+
+Try it out:
+```bash
+# Health check
+curl https://stem-separator-api-production.up.railway.app/health
+
+# Separate audio (example)
+curl -X POST "https://stem-separator-api-production.up.railway.app/api/v1/separate?stems=2stems" \
+  -F "file=@your_audio.mp3"
+```
+
 ## 📋 Requirements
 
 - Python 3.9+
@@ -184,7 +202,13 @@ curl -X GET "http://localhost:8000/api/v1/separate/181543dd-c632-4a42-bb8d-f3ca7
 
 ### Interactive API Documentation
 
-Visit http://localhost:8000/docs for the interactive Swagger UI where you can:
+**Local Development:**
+- Visit http://localhost:8000/docs for the interactive Swagger UI
+
+**Live Deployment:**
+- Visit https://stem-separator-api-production.up.railway.app/docs for the live Swagger UI
+
+The Swagger UI allows you to:
 - View all endpoints with detailed descriptions
 - See request/response examples
 - Try out the API directly from your browser
@@ -383,7 +407,16 @@ pytest
 
 ### Railway Deployment
 
-This project is configured for easy deployment on Railway:
+This project is configured for easy deployment on Railway and is **currently live**:
+
+🌐 **Live API**: https://stem-separator-api-production.up.railway.app
+
+**Quick Links:**
+- **Swagger UI**: https://stem-separator-api-production.up.railway.app/docs
+- **ReDoc**: https://stem-separator-api-production.up.railway.app/redoc
+- **Health Check**: https://stem-separator-api-production.up.railway.app/health
+
+**Deployment Steps:**
 
 1. **Connect your GitHub repository** to Railway
 2. **Railway will automatically detect** the Dockerfile
@@ -401,7 +434,13 @@ This project is configured for easy deployment on Railway:
    - Automatically set the PORT environment variable
    - Start the application
 
-**Note**: The Dockerfile uses `requirements-linux.txt` which contains `tensorflow==2.13.0` (Linux version) instead of `tensorflow-macos` (macOS only).
+**Technical Details:**
+- **Python Version**: 3.8 (for numpy 1.18.x wheel compatibility)
+- **TensorFlow**: 2.3.0 (required by Spleeter 2.1.0)
+- **Protobuf**: <=3.20.0 (required by TensorFlow 2.3.0)
+- **Platform**: Linux (Railway uses Linux containers)
+
+**Note**: The Dockerfile uses `requirements-linux.txt` which contains `tensorflow==2.3.0` (Linux version) instead of `tensorflow-macos==2.13.0` (macOS only). The deployment automatically handles PORT environment variable and uses CPU-only TensorFlow (GPU not available on Railway).
 
 ### Docker Build
 
