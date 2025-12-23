@@ -243,7 +243,12 @@ stem-sep/
 │   ├── uploads/
 │   └── output/
 ├── logs/                        # Application logs
-├── requirements.txt             # Python dependencies
+├── requirements.txt             # Python dependencies (macOS)
+├── requirements-linux.txt      # Python dependencies (Linux/Railway)
+├── Dockerfile                   # Docker configuration for Railway
+├── start.sh                     # Startup script for Railway
+├── Procfile                     # Railway Procfile
+├── railway.json                 # Railway configuration
 └── README.md
 ```
 
@@ -376,6 +381,37 @@ pytest
 
 ## 🚢 Production Deployment
 
+### Railway Deployment
+
+This project is configured for easy deployment on Railway:
+
+1. **Connect your GitHub repository** to Railway
+2. **Railway will automatically detect** the Dockerfile
+3. **Set environment variables** (optional):
+   ```env
+   DEBUG=False
+   LOG_FORMAT=json
+   LOG_LEVEL=INFO
+   CLEANUP_AFTER_PROCESSING=True
+   MAX_UPLOAD_SIZE=104857600
+   ```
+4. **Deploy!** Railway will:
+   - Build the Docker image using `Dockerfile`
+   - Use `requirements-linux.txt` (Linux-compatible TensorFlow)
+   - Automatically set the PORT environment variable
+   - Start the application
+
+**Note**: The Dockerfile uses `requirements-linux.txt` which contains `tensorflow==2.13.0` (Linux version) instead of `tensorflow-macos` (macOS only).
+
+### Docker Build
+
+To build and run locally:
+
+```bash
+docker build -t stem-separator-api .
+docker run -p 8000:8000 stem-separator-api
+```
+
 ### Environment Variables
 
 Set these in your production environment:
@@ -386,32 +422,7 @@ LOG_FORMAT=json
 LOG_LEVEL=INFO
 CLEANUP_AFTER_PROCESSING=True
 MAX_UPLOAD_SIZE=104857600
-```
-
-### Docker (Optional)
-
-The project can be containerized. Example Dockerfile:
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    libsndfile1 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application
-COPY app/ ./app/
-
-# Run application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+PORT=8000  # Railway sets this automatically
 ```
 
 ## 📝 Logging

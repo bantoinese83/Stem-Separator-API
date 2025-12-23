@@ -55,6 +55,9 @@ Thumbs.db
 # Model files (large, download on first use)
 pretrained_models/
 
+# Railway
+.railway/
+
 # Jupyter
 .ipynb_checkpoints/
 

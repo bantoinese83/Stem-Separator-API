@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     # Server Settings
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = 8000  # Can be overridden by PORT environment variable (Railway sets this)
     WORKERS: int = 1
 
     # File Upload Settings
