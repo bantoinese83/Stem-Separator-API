@@ -4,6 +4,8 @@ FROM python:3.9-slim
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsndfile1 \
+    build-essential \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -13,7 +15,12 @@ WORKDIR /app
 COPY requirements-linux.txt requirements.txt
 
 # Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
+# Install numpy first with compatible setuptools (Spleeter requires old numpy)
+# numpy 1.18.5 needs older setuptools to build from source
+RUN pip install --no-cache-dir --upgrade pip wheel && \
+    pip install --no-cache-dir "setuptools<60.0" && \
+    pip install --no-cache-dir "numpy==1.18.5" && \
+    pip install --no-cache-dir --upgrade setuptools && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
