@@ -15,10 +15,8 @@ WORKDIR /app
 COPY requirements-linux.txt requirements.txt
 
 # Install Python dependencies
-# Install numpy first - force wheel installation (Spleeter requires old numpy)
-# Use --only-binary to avoid building from source
+# Python 3.8 has pre-built wheels for numpy 1.18.x (required by Spleeter)
 RUN pip install --no-cache-dir --upgrade pip wheel && \
-    pip install --no-cache-dir --only-binary=numpy "numpy<1.19.0,>=1.18.0" && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
