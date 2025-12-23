@@ -15,12 +15,10 @@ WORKDIR /app
 COPY requirements-linux.txt requirements.txt
 
 # Install Python dependencies
-# Install numpy first with compatible setuptools (Spleeter requires old numpy)
-# numpy 1.18.5 needs older setuptools to build from source
+# Install numpy first - force wheel installation (Spleeter requires old numpy)
+# Use --only-binary to avoid building from source
 RUN pip install --no-cache-dir --upgrade pip wheel && \
-    pip install --no-cache-dir "setuptools<60.0" && \
-    pip install --no-cache-dir "numpy==1.18.5" && \
-    pip install --no-cache-dir --upgrade setuptools && \
+    pip install --no-cache-dir --only-binary=numpy "numpy<1.19.0,>=1.18.0" && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
