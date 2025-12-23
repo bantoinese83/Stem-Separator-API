@@ -1,0 +1,7 @@
+# Conda configuration for better performance
+channels:
+  - conda-forge
+  - defaults
+channel_priority: flexible
+auto_activate_base: false
+
