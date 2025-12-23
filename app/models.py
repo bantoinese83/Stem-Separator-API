@@ -1,7 +1,7 @@
 """Pydantic models for request/response validation."""
 
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -80,7 +80,7 @@ class SeparationResponse(BaseModel):
         description="The stem type that was used for separation",
         examples=[StemType.TWO_STEMS],
     )
-    output_files: list[str] = Field(
+    output_files: List[str] = Field(
         description="List of generated output file paths. Use these with the download endpoint.",
         examples=[["vocals.wav", "accompaniment.wav"]],
     )

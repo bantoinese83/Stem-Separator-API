@@ -7,7 +7,7 @@ import app.tensorflow_compat  # noqa: F401
 import shutil
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional
 
 from halo import Halo
 from loguru import logger
@@ -31,7 +31,7 @@ app.tensorflow_compat.patch_tensorflow_estimator()  # noqa: E402
 logger = logger.bind(name=__name__)
 
 # Pre-compute stem files mapping for O(1) lookup instead of O(n) if/elif
-STEM_FILES_MAP: dict[StemType, list[str]] = {
+STEM_FILES_MAP: Dict[StemType, List[str]] = {
     StemType.TWO_STEMS: ["vocals", "accompaniment"],
     StemType.FOUR_STEMS: ["vocals", "drums", "bass", "other"],
     StemType.FIVE_STEMS: ["vocals", "drums", "bass", "piano", "other"],
@@ -43,7 +43,7 @@ class AudioService:
 
     def __init__(self):
         """Initialize the audio service."""
-        self.separators: dict[str, Separator] = {}
+        self.separators: Dict[str, Separator] = {}
         self.audio_adapter = AudioAdapter.default()
         logger.info("AudioService initialized")
 
@@ -187,7 +187,7 @@ class AudioService:
                 )
                 raise ProcessingError(f"Failed to separate audio: {str(e)}") from e
 
-    def _get_output_files(self, output_dir: Path, stems: StemType) -> list[str]:
+    def _get_output_files(self, output_dir: Path, stems: StemType) -> List[str]:
         """Get list of output files based on stem type."""
         # O(1) dict lookup instead of O(n) if/elif chain
         expected_files = STEM_FILES_MAP.get(stems, [])
